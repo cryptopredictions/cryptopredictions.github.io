@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Facebook Open Graph -->
+    <meta property="og:site_name" content="Crypto Predictions">
+    <meta property="og:url" content="http://www.cryptopredictions.io">
+    <meta property="og:title" content="Make The Right Predictions, And Win.">
+    <meta property="og:description" content="&nbsp;">
+    <meta property="og:type" content="game.achievement">
+    <meta property="og:image" content="http://www.cryptopredictions.io/logo_fb.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="fb:app_id" content="1895754633777168">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@CryptoPredictions">
+    <meta name="twitter:title" content="Predict Bitcoin and Ethereum prices and win. What's your prediction?">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:image" content="http://www.cryptopredictions.io/logo_large.png">
+
+    <title>Crypto Predictions</title>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@0.20.6/dist/web3.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <!-- Bulma Version 0.6.2-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css" integrity="sha256-2k1KVsNPRXxZOsXQ8aqcZ9GOOwmJTMoOB5o5Qp1d6/s=" crossorigin="anonymous" />
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117568533-1"></script>
+    <script>
+     window.dataLayer = window.dataLayer || [];
+     function gtag(){dataLayer.push(arguments);}
+     gtag('js', new Date());
+
+     gtag('config', 'UA-117568533-1');
+    </script>
+
+    <style type="text/css">
+    .navbar.is-white {
+      background: #F0F2F4;
+    }
+    .navbar-item img {
+      max-height: none;
+    }
+    #faq strong {
+      font-size: 1.3rem;
+    }
+    #faq.container div {
+      margin-top: 3rem;
+    }
+    #faq table thead th {
+      font-weight: normal;
+    }
+    #faq ul li {
+      list-style-type: initial;
+    }
+
+    blockquote {
+      background-color: #f5f5f5;
+      border-left: 5px solid #dbdbdb;
+      padding: 1.25em 1.5em;
+    }
+    .usd {
+      /*font-size: .8em;*/
+      font-weight: normal !important;
+      /*display: block;*/
+    }
+    #mc_embed_signup div.mce_inline_error {
+      background: #ff3860;
+    }
+    .media-image {
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        width: 60px;
+        height: 60px;
+        margin-left: -30px;
+    }
+    .media-center {
+      display: block;
+      margin-bottom: 1rem;
+    }
+    .media-content {
+      margin-top: 3rem;
+    }
+    .article-title {
+      font-size: 2rem;
+      font-weight: bold;
+      line-height: 2;
+    }
+    .article-body {
+      line-height: 1.4;
+      margin: 0 4rem;
+    }
+    .loading {
+      z-index: 1;
+      display: none;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .loading::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: rgba(255,255,255,0.95);
+      filter: blur(10px);
+      z-index: -1;
+    }
+
+    .loading object {
+      margin: 5rem 0
+    }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar has-shadow">
+      <div class="container">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="/">
+            <h1 class="title is-4 ml-2"><img src="logo.png" alt="CryptoPredictions" width="225px"></h1>
+          </a>
+          <span class="navbar-burger burger" data-target="navbarMenu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </div>
+        <div id="navbarMenu" class="navbar-menu">
+          <div class="navbar-end">
+            <a class="navbar-item" href="https://discord.gg/NJ5kC" target="_blank">
+              Discord
+            </a>
+            <a class="navbar-item" href="#faq">
+              FAQ
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- END NAV -->
+    <div class="modal" id="congrats">
+      <div class="modal-background" onclick="$('#congrats').removeClass('is-active'); $('#mce-success-response').hide()"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Congrats! Your <span class="pred_type"></span> prediction is saved</p>
+          <button class="delete" aria-label="close" onclick="$('#congrats').removeClass('is-active')"></button>
+        </header>
+        <section class="modal-card-body">
+            <div id="mc_embed_signup" class="notification is-warning">
+              <span class="has-text-weight-bold">Sign up to be notified when this <span class="pred_type"></span> prediction is won</span>
+              <br/><br/>
+              <!--End mc_embed_signup-->
+              <form action="" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate="novalidate">
+                <div id="mc_embed_signup_scroll">
+                  <div class="mc-field-group field has-addons">
+                    <input type="email" value="" name="EMAIL" class="email input" id="mce-EMAIL" aria-required="true" aria-invalid="false" placeholder="Email">
+                    <input type="submit" value="Sign up" name="subscribe" id="mc-embedded-subscribe" class="button is-success">
+                  </div>
+                  <div for="mce-EMAIL" class="mce_inline_error notification is-danger" style="display: none;">Please enter a valid email address.</div>
+                  <div id="mce-responses" class="clear">
+                    <div class="response" id="mce-error-response" style="display:none"></div>
+                    <div class="response" id="mce-success-response" style="display:none"></div>
+                  </div>
+                  <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                    <input type="text" id="hidden_name" name="" tabindex="-1" value="">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';fnames[3]='ADDRESS';ftypes[3]='address';fnames[4]='PHONE';ftypes[4]='phone';}(jQuery));var $mcj = jQuery.noConflict(true);</script> -->
+            <!--End mc_embed_signup-->
+            <br/>
+            <div class="notification is-warning">
+              <span class="has-text-weight-bold">Share your prediction</span>
+              <br/>
+              <br/>
+              <blockquote id="share_text">I just predicted <span class="pred_type"></span> will pass <span class="pred_target"></span> in <span id="share_month"></span> <span id="share_year"></span>. What's your prediction? Make it here - https://cryptopredictions.io</blockquote>
+              <br/>
+              <div class="columns" style="text-align: center">
+                <div class="column">
+                  <a class="button is-link" target="_blank" href="http://www.facebook.com/sharer.php?src=sp&u=http%3A%2F%2Fwww.cryptopredictions.io">Share on FB</a>
+                </div>
+                <div class="column">
+                  <a class="button is-link" id="tweet" target="_blank" href="https://twitter.com/intent/tweet?text=">Share on Twitter</a>
+                </div>
+              </div>
+            </div>
+        </section>
+      </div>
+    </div>
+    <div class="modal" id="metamask">
+      <div class="modal-background" onclick="$('#metamask').removeClass('is-active');"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">MetaMask</p>
+          <button class="delete" aria-label="close" onclick="$('#metamask').removeClass('is-active')"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="notification is-danger" style="display:none" id="metamask_not_detected">
+            Please install <a href="https://metamask.io/" target="_blank">MetaMask</a> first, refresh the page, and try again.
+          </div>
+          <div class="notification is-danger" style="display:none" id="metamask_locked">
+            MetaMask is <strong>locked</strong>. Please unlock, refresh the page, and try again.
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="modal" id="chart">
+      <div class="modal-background" onclick="$('#chart').removeClass('is-active');"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title"><span class="pred_type"></span> Predictions to Date</p>
+          <button class="delete" aria-label="close" onclick="$('#chart').removeClass('is-active')"></button>
+        </header>
+        <section class="modal-card-body" id="draw_chart">
+        </section>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- START ARTICLE FEED -->
+      <section class="hero">
+        <div class="hero-body" style="text-align: center; padding: 6rem 1.5rem">
+            <h1 class="title" style="font-size: 3rem;">
+              Make The Right Predictions, And Win.
+            </h1>
+        </div>
+      </section>
+      <div class="columns">
+        <div class="column">
+          <div class="card article">
+            <div class="card-content">
+              <div class="loading is-overlay" id="btc_wait">
+                <object data="pacman.svg" type="image/svg+xml"></object>
+                <div id="btc_status" class="title">
+                  Waiting for transaction to complete
+                </div>
+                <div>(This can take a minute, go ahead - hold your breath)</div>
+                <!-- <br/>
+                <div class="tx_complete">
+                  <span class="complete is-success" style="display: none">&#x2705;</span>
+                  Updating Pot
+                </div> -->
+              </div>
+              <div class="media">
+                <div class="media-center">
+                  <img src="./btc.png" class="media-image" alt="Predict on Bitcoin">
+                </div>
+                <div class="media-content has-text-centered">
+                  <p class="title" style="font-size: 1.5rem">Pot: <span id="btc_total"></span> ETH <span class="usd" id="btc_usd"></span></p>
+                  <p class="title article-title has-text-link">When will Bitcoin pass $15,000?</p>
+                </div>
+              </div>
+              <div class="content article-body">
+                <div class="field has-addons">
+                  <div class="control is-expanded">
+                    <input class="input is-medium" type="text" placeholder="Year" id="btclong_year" name="btclong_year">
+                  </div>
+                  <div class="control">
+                    <div class="select is-medium">
+                      <select id="btclong_month" name="btclong_month">
+                        <option>Month</option>
+                        <option value="1">Jan</option>
+                        <option value="2">Feb</option>
+                        <option value="3">Mar</option>
+                        <option value="4">Apr</option>
+                        <option value="5">May</option>
+                        <option value="6">Jun</option>
+                        <option value="7">Jul</option>
+                        <option value="8">Aug</option>
+                        <option value="9">Sep</option>
+                        <option value="10">Oct</option>
+                        <option value="11">Nov</option>
+                        <option value="12">Dec</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="field has-addons">
+                  <div class="control is-expanded">
+                    <input class="input is-medium" type="text" placeholder="Amount (ETH)" id="btclong_amount" name="btclong_amount">
+                  </div>
+                  <div class="control">
+                    <a class="button is-medium is-link is-hidden-mobile" id="btclong" name="btclong">
+                      Predict
+                    </a>
+                  </div>
+                </div>
+                <div>
+                  <div class="notification is-warning is-hidden-desktop">
+                    CryptoPredictions is only available on desktop
+                  </div>
+                  <i style="text-align: center">Amount will be added to pot. If your prediction is correct, you're a winner of the pot!</i>
+                  <br/>
+                  <div id="btc_err" class="notification is-warning" style="display: none">
+                  </div>
+                  <br/>
+                </div>
+              </div>
+              <div class="media" style="text-align: center">
+                <br/>
+                <a class="button is-link is-outlined" style="margin: auto;" onclick="showHidePredictions(this, true)">Show Predictions to Date</a>
+                <a class="button is-link is-outlined" style="margin: auto;" href="https://discord.gg/NJ5kC" target="_blank">Chat With Other Predictors</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="card article">
+            <div class="card-content">
+              <div class="loading is-overlay" id="eth_wait">
+                <object data="spinner.svg" type="image/svg+xml"></object>
+                <div id="eth_status" class="title">
+                  Waiting for transaction to complete
+                </div>
+                <div>(This can take a minute, go ahead - hold your breath)</div>
+                <!-- <br/>
+                <div class="tx_complete">
+                  <span class="complete is-success" style="display: none">&#x2705;</span>
+                  Updating Pot
+                </div> -->
+              </div>
+              <div class="media">
+                <div class="media-center">
+                  <img src="./ethereum-lite128.png" class="media-image" alt="Predict on Ethereum">
+                </div>
+                <div class="media-content has-text-centered">
+                  <p class="title" style="font-size: 1.5rem">Pot: <span id="eth_total"></span> ETH <span class="usd" id="eth_usd"></span></p>
+                  <p class="title article-title has-text-link">When will Ethereum pass $1,000?</p>
+                </div>
+              </div>
+              <div class="content article-body">
+                <div class="field has-addons">
+                  <div class="control is-expanded">
+                    <input class="input is-medium" type="text" placeholder="Year" id="ethlong_year" name="ethlong_year">
+                  </div>
+                  <div class="control">
+                    <div class="select is-medium">
+                      <select id="ethlong_month" name="ethlong_month">
+                        <option>Month</option>
+                        <option value="1">Jan</option>
+                        <option value="2">Feb</option>
+                        <option value="3">Mar</option>
+                        <option value="4">Apr</option>
+                        <option value="5">May</option>
+                        <option value="6">Jun</option>
+                        <option value="7">Jul</option>
+                        <option value="8">Aug</option>
+                        <option value="9">Sep</option>
+                        <option value="10">Oct</option>
+                        <option value="11">Nov</option>
+                        <option value="12">Dec</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="field has-addons">
+                  <div class="control is-expanded">
+                    <input class="input is-medium" type="text" placeholder="Amount (ETH)" id="ethlong_amount" name="ethlong_amount">
+                  </div>
+                  <div class="control">
+                    <a class="button is-medium is-link" id="ethlong" name="ethlong">
+                      Predict
+                    </a>
+                  </div>
+                </div>
+                <div>
+                  <div class="notification is-warning is-hidden-desktop">
+                    CryptoPredictions is only available on desktop
+                  </div>
+                  <i style="text-align: center">Amount will be added to pot. If your prediction is correct, you're a winner of the pot!</i>
+                  <br/>
+                  <div id="eth_err" class="notification is-warning" style="display: none">
+                  </div>
+                  <br/>
+                </div>
+              </div>
+              <div class="media" style="text-align: center;">
+                <br/>
+                <a class="button is-link is-outlined" style="margin: auto;" onclick="showHidePredictions(this, false)">Show Predictions to Date</a>
+                <a class="button is-link is-outlined" style="margin: auto;" href="https://discord.gg/NJ5kC" target="_blank">Chat With Other Predictors</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <script>
+        String.prototype.splice = function(start, delCount, newSubStr) {
+          return this.slice(0, start) + newSubStr + this.slice(start + Math.abs(delCount));
+        };
+        function showHidePredictions(elem, is_btc) {
+          $("#chart").addClass("is-active");
+          $("#draw_chart").text("")
+          if(is_btc) {
+            $(".pred_type").text("Bitcoin ")
+            drawBtcChart()
+          } else {
+            $(".pred_type").text("Ethereum ")
+            drawEthChart()
+          }
+        }
+
+        function checkMetaMask() {
+          if (!web3.currentProvider.isMetaMask) {
+            $("#metamask").addClass("is-active")
+            $("#metamask_not_detected").show()
+          } else if (web3.eth.accounts[0] === undefined) {
+            $("#metamask").addClass("is-active")
+            $("#metamask_locked").show()
+          }
+
+        }
+
+        function updateEthPot() {
+          EthLong.pot_total(function(e,r) {
+            var usd = $.get( "https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD", function( data ) {
+              $("#eth_usd").text("($" + (parseFloat(web3.fromWei(r.toString(), 'ether')) * parseFloat(data[0].price_usd)).toFixed(2) + ")");
+            })
+            $("#eth_total").text(parseFloat(web3.fromWei(r.toString(), 'ether')).toFixed(3))
+          })
+        }
+
+        function updateBtcPot() {
+          BtcLong.pot_total(function(e,r) {
+            var usd = $.get( "https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD", function( data ) {
+              $("#btc_usd").text("($" + (parseFloat(web3.fromWei(r.toString(), 'ether')) * parseFloat(data[0].price_usd)).toFixed(2) + ")");
+            })
+            $("#btc_total").text(parseFloat(web3.fromWei(r.toString(), 'ether')).toFixed(3))
+          })
+        }
+
+        function parseData(predictions, elem) {
+          var _d = [];
+          var data = [['Month/Year', 'Total ETH', 'Your Amount']];
+          for (var i = 0; i < predictions[0].length; i++) {
+            _d.push([
+              predictions[0][i].toString(),
+              parseFloat(web3.fromWei(predictions[1][i], 'ether').toString()),
+              parseFloat(web3.fromWei(predictions[2][i], 'ether').toString())
+            ]);
+          }
+          _d.sort(function(x,y) {
+            return x[0] - y[0]
+          })
+          for (var i = 0; i < _d.length; i++) {
+            var date = _d[i][0];
+            date = date.splice(4,0,"/");
+            data.push([date, _d[i][1], _d[i][2]])
+          }
+          var chart_height = data.length * 25;
+          var options = {
+            title: '',
+            height: chart_height,
+            chartArea: {width: '60%', height: '90%'},
+            isStacked: true,
+            legend: { position: "none" }
+          };
+          if (data.length > 1) {
+            var chart = new google.visualization.BarChart(document.getElementById(elem));
+            chart.draw(google.visualization.arrayToDataTable(data), options);
+          }
+        }
+
+        function drawEthChart() {
+          EthLong.getPredictions(
+            {from: web3.eth.defaultAccount, gas: 300000},
+            function(err, predictions) {
+              console.log(err);
+              parseData(predictions, 'draw_chart')
+            }
+          );
+        }
+
+        function drawBtcChart() {
+          BtcLong.getPredictions(
+            {from: web3.eth.defaultAccount, gas: 300000},
+            function(err, predictions) {
+              console.log(err);
+              parseData(predictions, 'draw_chart')
+            }
+          );
+        }
+
+        mc = {
+          btc : {
+            url: "https://cryptopredictions.us18.list-manage.com/subscribe/post?u=1c77d9c94b726240a52e3eb48&amp;id=d8e2ce4ba6",
+            hidden_name: "b_1c77d9c94b726240a52e3eb48_d8e2ce4ba6"
+          },
+          eth : {
+            url: "https://cryptopredictions.us18.list-manage.com/subscribe/post?u=1c77d9c94b726240a52e3eb48&amp;id=fbcf43a03e",
+            hidden_name: "b_1c77d9c94b726240a52e3eb48_fbcf43a03e"
+          }
+        }
+        function updateCongrats(is_btc) {
+          // set form url, hidden name, btc/eth text, add share text month and year
+          if (is_btc) {
+            $("#mc-embedded-subscribe-form").attr("action", mc.btc.url)
+            $("#hidden_name").attr("name", mc.btc.hidden_name)
+            $('.pred_type').text('Bitcoin')
+            $(".pred_target").text(" $15,000 ")
+            $("#share_month").text($("#btclong_month :selected").text())
+            $("#share_year").text($("#btclong_year").val())
+          } else {
+            $("#mc-embedded-subscribe-form").attr("action", mc.eth.url)
+            $("#hidden_name").attr("name", mc.eth.hidden_name)
+            $('.pred_type').text('Ethereum')
+            $(".pred_target").text(" $1,000 ")
+            $("#share_month").text($("#ethlong_month :selected").text())
+            $("#share_year").text($("#ethlong_year").val())
+          }
+
+          $("#tweet").attr("href", $("#tweet").attr("href")+$("#share_text").text())
+          $("#congrats").addClass("is-active")
+        }
+
+        function showWinningAmount(is_btc) {
+          var instance = is_btc ? BtcLong : EthLong;
+          var predictions_by_user = instance.getWinningPrediction(web3.eth.defaultAccount);
+          for (var k = 0; k < predictions_by_user[0].length; k++) {
+            var amount = predictions_by_user[0][k];
+            var days_since_start = predictions_by_user[1][k];
+            var payout = instance.calculatePayout(amount, days_since_start);
+            console.log("\tprediction amount:", web3.fromWei(amount.toString(), 'ether'), "\tdays since start:", days_since_start.toString());
+            total_payout = total_payout.plus(payout);
+          }
+          console.log("\ttotal payout:", web3.fromWei(payout.toString(), 'ether'))
+        }
+
+        var eth_interval;
+        var btc_interval;
+        function checkTxStatus(tx, is_btc) {
+          web3.eth.getTransactionReceipt(tx, function(e,r) {
+            console.log(e)
+            console.log(r)
+            if(r) {
+              // no longer pending
+              if (is_btc) {
+                clearInterval(btc_interval)
+                if(r.status == '0x1') {
+                  updateBtcPot()
+                  $("#btc_wait").hide()
+                  updateCongrats(true);
+                } else {
+                  // update with an error message
+                  $("#btc_status").text("Something went wrong. Please contact us on discord")
+                }
+              } else {
+                clearInterval(eth_interval)
+                if(r.status == '0x1') {
+                  updateEthPot()
+                  $("#eth_wait").hide()
+                  updateCongrats(false);
+                } else {
+                  $("#eth_status").text("Something went wrong. Please contact us on discord")
+                }
+              }
+            }
+          })
+        }
+      </script>
+      <script>
+        if (typeof web3 !== 'undefined') {
+          web3 = new Web3(web3.currentProvider);
+        } else {
+          web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/P5wVki9hzZMnMnCpgx8f"));
+        }
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+
+        var PredictionContract = web3.eth.contract([{"constant":true,"inputs":[],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint16"}],"name":"payout_multiples","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"target_hit","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"can","type":"bool"}],"name":"updateCanFetch","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"payout_normalizer","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"CRYPTO_USD","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"predictor","type":"address"}],"name":"getWinningPrediction","outputs":[{"name":"","type":"uint256[]"},{"name":"","type":"uint16[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"start_date","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"myid","type":"bytes32"},{"name":"result","type":"string"}],"name":"__callback","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"user_predictions","outputs":[{"name":"withdrawn","type":"bool"},{"name":"total_amount","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"winning_month","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"price_target","outputs":[{"name":"","type":"uint24"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"end_date","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"myid","type":"bytes32"},{"name":"result","type":"string"},{"name":"proof","type":"bytes"}],"name":"__callback","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"ym_index","outputs":[{"name":"","type":"uint24"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"cutoff","outputs":[{"name":"","type":"uint24"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"is_hourly","type":"bool"}],"name":"updateCheckHourly","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"refund","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"closed","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"closeContract","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"pot_total","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_refund","type":"bool"}],"name":"updateCanRefund","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"transferLeftover","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"amount","type":"uint256"},{"name":"days_since_start","type":"uint16"}],"name":"calculatePayout","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"delay","type":"uint256"}],"name":"_fetch","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"year","type":"uint16"},{"name":"month","type":"uint8"}],"name":"predict","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"winning_year","outputs":[{"name":"","type":"uint16"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"is_btc","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"can_refund","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint24"}],"name":"ym_totals","outputs":[{"name":"amount","type":"uint256"},{"name":"num_predictions","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"calculatePayoutVariables","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"FEE","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getPredictions","outputs":[{"name":"","type":"uint24[]"},{"name":"amounts","type":"uint256[]"},{"name":"user_amounts","type":"uint256[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"value","type":"uint256"}],"name":"calculateCommission","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"MIN_AMOUNT","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"collect","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_cutoff","type":"uint24"}],"name":"updateCutoff","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint24"},{"name":"","type":"address"}],"name":"predictions","outputs":[{"name":"withdrawn","type":"bool"},{"name":"total_amount","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"target","type":"uint24"},{"name":"_cutoff","type":"uint24"},{"name":"_is_btc","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[],"name":"PredictionPlaced","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"note","type":"string"},{"indexed":false,"name":"val","type":"uint256"}],"name":"Print","type":"event"}]);
+        var EthLong = PredictionContract.at('0xd2302da9fe84e0aebbf8246fa19777e995b3c3a9');
+        var ethPredictionEvent = EthLong.PredictionPlaced();
+        var BtcLong = PredictionContract.at('0x3cf81b7a8c20fc289feeacaa510cad4c00dbe43c');
+        var btcPredictionEvent = BtcLong.PredictionPlaced();
+      </script>
+      <script type="text/javascript">
+        updateEthPot();
+        updateBtcPot();
+
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawEthChart);
+        google.charts.setOnLoadCallback(drawBtcChart);
+      </script>
+      <script>
+        $("#ethlong").click(function() {
+          checkMetaMask();
+          if ($("#ethlong_month").val() == "Month") {
+            $("#eth_err").text("Please select a Month")
+            $("#eth_err").show()
+          } else if ($("#ethlong_year").val() == "") {
+            $("#eth_err").text("Please enter a Year")
+            $("#eth_err").show()
+          } else {
+            $("#eth_err").hide()
+          }
+
+          $("#eth_wait").show()
+          EthLong.predict(
+            $("#ethlong_year").val(),
+            $("#ethlong_month").val(),
+            {from: web3.eth.defaultAccount,
+              gas: 340000,
+              value: web3.toWei($("#ethlong_amount").val(), 'ether')},
+            function(err, res) {
+              console.log(err, res);
+              if(!err) {
+                eth_interval = setInterval(function(){ 
+                  checkTxStatus(res, false);
+                }, 1000);
+              }
+            }
+          );
+        });
+
+        $("#btclong").click(function() {
+          checkMetaMask();
+          if ($("#btclong_month").val() == "Month") {
+            $("#btc_err").text("Please select a Month")
+            $("#btc_err").show()
+          } else if ($("#btclong_year").val() == "") {
+            $("#btc_err").text("Please enter a Year")
+            $("#btc_err").show()
+          } else {
+            $("#btc_err").hide()
+          }
+
+          $("#btc_wait").show()
+          BtcLong.predict(
+            $("#btclong_year").val(),
+            $("#btclong_month").val(),
+            {from: web3.eth.defaultAccount,
+              gas: 340000,
+              value: web3.toWei($("#btclong_amount").val(), 'ether')},
+            function(err, res) {
+              console.log(err, res);
+              if(!err) {
+                btc_interval = setInterval(function(){ 
+                  checkTxStatus(res, true);
+                }, 1000);
+              }
+            }
+          );
+        });
+        $("#ethlong_collect").click(function() {
+          EthLong.collect({gas:60000}, function(e,r) {
+            // overlay: data
+            EthLong.getWinningPrediction(web3.eth.defaultAccount, function(e,r) {
+              console.log(e,r)
+            })
+          });
+        })
+        $("#btclong_collect").click(function() {
+          BtcLong.collect({gas:60000});
+        })
+      </script>
+    </div>
+    <div class="container" id="faq">
+      <section class="hero">
+        <div class="hero-body" style="text-align: center; padding-top: 2rem">
+            <h1 class="title" style="text-decoration: underline;">
+              Questions
+            </h1>
+        </div>
+      </section>
+
+      <div>
+        <strong>What is CryptoPredictions?</strong>
+        <p>
+          <br>
+          It's a game where players make predictions with cryptocurrency, which goes into pots. If your predictions turn out to be correct, you win the pots 🤑.
+        </p>
+      </div>
+
+      <div>
+        <strong>Who determines the winners?</strong>
+        <p>
+          <br>
+          Our Smart Contracts do. Each question has its own smart contract which is completely automated - from tracking crypto prices to distributing the winnings. No one, including us, can alter them. See for yourself:
+          <br/>
+          <ul>
+            <li><a target="_blank" href="https://etherscan.io/address/0x3cf81b7a8c20fc289feeacaa510cad4c00dbe43c">Bitcoin $15,000 Question Smart Contract</a></li>
+            <li><a target="_blank" href="https://etherscan.io/address/0xd2302da9fe84e0aebbf8246fa19777e995b3c3a9">Ethereum $1,000 Question Smart Contract</a></li>
+          </ul>
+        </p>
+      </div>
+
+      <div>
+        <strong>Can there be multiple winners?</strong>
+        <p>
+          <br/>
+          Yes! In the case of multiple winners, the smart contracts will split the pot proportionately.
+        </p>
+      </div>
+
+      <div>
+        <strong>For a given question, is there a cutoff?</strong>
+        <p>
+          <br/>
+          Yes, when a target is 90% realized. For example, "When will Ethereum pass $1000?" will be closed to all predictions when Ethereum passes $900.
+        </p>
+      </div>
+
+      <div>
+        <strong>Is there any advantage for making predictions well ahead of the cutoff?</strong>
+        <p>
+          <br/>
+          The earlier you make a prediction, the higher your payout will be. We calculate the payout multiple using the number of days.
+          <br/>
+          Here's an example of the winnings based on <span class="has-text-weight-bold">when</span> predictions were made for a question that cutoff at 100 days and grew to a 100 ETH pot:
+          <br/>
+          <br/>
+          <table class="table is-striped">
+            <thead>
+              <tr>
+                <th>Amount</th>
+                <th>Day of Prediction</th>
+                <th>Normal Payout</th>
+                <th class="has-text-weight-bold">Actual Weighted Payout</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1 ETH</td>
+                <td>1</td>
+                <td>25 ETH</td>
+                <td class="has-text-weight-bold">40 ETH</td>
+              </tr>
+              <tr>
+                <td>1 ETH</td>
+                <td>10</td>
+                <td>25 ETH</td>
+                <td class="has-text-weight-bold">35 ETH</td>
+              </tr>
+              <tr>
+                <td>1 ETH</td>
+                <td>50</td>
+                <td>25 ETH</td>
+                <td class="has-text-weight-bold">20 ETH</td>
+              </tr>
+              <tr>
+                <td>1 ETH</td>
+                <td>100</td>
+                <td>25 ETH</td>
+                <td class="has-text-weight-bold">5 ETH</td>
+              </tr>
+            </tbody>
+          </table>
+        </p>
+      </div>
+
+      <div>
+        <strong>Can I make multiple predictions?</strong>
+        <p>
+          <br/>
+          Yes! Each prediction is tracked separately.
+        </p>
+      </div>
+
+      <div>
+        <strong>How do I collect my winnings?</strong>
+        <p>
+          <br/>
+          As soon as a prediction is won, you'll receive an email notification. If your prediction was correct, you'll see a 'Redeem Winnings' button directly below the relevant question. Just click that, and your winnings will be sent to your MetaMask (see below) wallet.
+        </p>
+      </div>
+
+      <div>
+        <strong>What happens if no one makes the correct prediction?</strong>
+        <p>
+          <br/>
+          This is extremely unlikely, but in the event that no one wins the pot - it'll get rolled over to the next prediction.
+        </p>
+      </div>
+
+      <div>
+        <strong>Is this legal?</strong>
+        <p>
+          <br/>
+          CryptoPredictions is based out of Costa Rica, where games like this are perfectly legal.
+        </p>
+      </div>
+
+      <div>
+        <strong>What do I need to make predictions?</strong>
+        <p>
+          <br/>
+          <ul>
+            <li>Desktop version of Chrome or Firefox</li>
+            <li><a href="https://metamask.io/" target="_blank">MetaMask</a></li>
+            <li>Ether</li>
+          </ul>
+        </p>
+      </div>
+
+      <div>
+        <strong>What is MetaMask? Why do I need it?</strong>
+        <p>
+          <br/>
+          MetaMask is a digital wallet. You can install it <a href="https://metamask.io/" target="_blank">here</a>. You will then need to add Ether to it before you can make predictions.
+        </p>
+      </div>
+
+      <div>
+        <strong>How do I add Ether to my MetaMask wallet?</strong>
+        <p>
+          <br/>
+          If you already own Ether, you can send it from your current wallet to your MetaMask wallet's address. 
+          <br/>
+          If you don't currently own Ether, <a href="https://www.google.com/search?q=how+to+buy+ether" target="_blank">search here</a>.
+        </p>
+      </div>
+
+      <div>
+        <strong>Why Ether? Can I pay for predictions with Bitcoin?</strong>
+        <p>
+          <br/>
+          Bitcoin transactions can take hours. Ether transactions take minutes, sometimes seconds. So predictions can only be made with Ether, for now.
+        </p>
+      </div>
+
+      <div>
+        <strong>Are there any fees?</strong>
+        <p>
+          <br/>
+          5% of every prediction amount. For instance, if you make a prediction with 1 ETH, 0.95 ETH goes into the pot, and 0.05 ETH goes to buying our dog his favorite treats.
+        </p>
+      </div>
+
+      <div>
+        <strong>What's the best way to contact you?</strong>
+        <p>
+          <br/>
+          Our <a href="https://discord.gg/NJ5kC" target="_blank">Discord</a>
+        </p>
+      </div>
+
+      <div>
+        <strong>Will there be more predictions?</strong>
+        <p>
+          <br/>
+          Absolutely! Stay tuned.
+        </p>
+      </div>
+    </div>
+
+    <footer class="footer" style="margin-top: 5rem; padding-bottom: 3rem;">
+      <div style="text-align: center">
+        <a href="/privacy.html">Privacy Policy</a>
+        <br/>
+        <a href="/terms.html">Terms</a>
+        <br/>
+        © 2018 CryptoPredictions
+      </div>
+    </footer>
+    </body>
+  </html>
