@@ -424,8 +424,11 @@
           return true
         }
 
-        function isNumeric(n) {
-          return !isNaN(parseFloat(n)) && isFinite(n);
+        function isValidAmount(n) {
+          if (!isNaN(parseFloat(n)) && isFinite(n)) {
+            return parseFloat(n) >= 0.01;
+          }
+          return false;
         }
 
         function updateEthPot() {
@@ -603,13 +606,13 @@
         $("#ethlong").click(function() {
           checkMetaMask();
           if ($("#ethlong_month").val() == "Month") {
-            $("#eth_err").text("Please select a Month")
+            $("#eth_err").text("Please select a Month.")
             $("#eth_err").show()
           } else if ($("#ethlong_year").val() == "") {
-            $("#eth_err").text("Please enter a Year")
+            $("#eth_err").text("Please enter a Year.")
             $("#eth_err").show()
-          } else if (!isNumeric($("#ethlong_amount").val())) {
-            $("#eth_err").text("Please enter numbers only")
+          } else if (!isValidAmount($("#ethlong_amount").val())) {
+            $("#eth_err").text("Please enter numbers only. Minimum amount is 0.01.")
             $("#eth_err").show()
           } else {
             $("#eth_err").hide()
@@ -640,10 +643,10 @@
             $("#btc_err").text("Please select a Month")
             $("#btc_err").show()
           } else if ($("#btclong_year").val() == "") {
-            $("#btc_err").text("Please enter a Year")
+            $("#btc_err").text("Please enter a Year.")
             $("#btc_err").show()
-          } else if (!isNumeric($("#btclong_amount").val())) {
-            $("#btc_err").text("Please enter numbers only")
+          } else if (!isValidAmount($("#btclong_amount").val())) {
+            $("#btc_err").text("Please enter numbers only. Minimum amount is 0.01.")
             $("#btc_err").show()
           } else {
             $("#btc_err").hide()
