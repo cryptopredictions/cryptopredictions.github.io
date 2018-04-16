@@ -300,7 +300,7 @@
                   <div class="notification is-warning is-hidden-desktop">
                     CryptoPredictions is only available on desktop
                   </div>
-                  <i style="text-align: center">Amount will be added to pot. If your prediction is correct, you're a winner of the pot! (The larger your bet, the larger your share of the pot.)</i>
+                  <i style="text-align: center">Amount will be added to pot. If your prediction is correct, you're a winner of the pot! (The larger your amount, the larger your share of the pot.)</i>
                   <br/>
                   <div id="btc_err" class="notification is-warning" style="display: none">
                   </div>
@@ -378,7 +378,7 @@
                   <div class="notification is-warning is-hidden-desktop">
                     CryptoPredictions is only available on desktop
                   </div>
-                  <i style="text-align: center">Amount will be added to pot. If your prediction is correct, you're a winner of the pot! (The larger your bet, the larger your share of the pot.)</i>
+                  <i style="text-align: center">Amount will be added to pot. If your prediction is correct, you're a winner of the pot! (The larger your amount, the larger your share of the pot.)</i>
                   <br/>
                   <div id="eth_err" class="notification is-warning" style="display: none">
                   </div>
@@ -612,7 +612,7 @@
             $("#eth_err").text("Please enter a Year.")
             $("#eth_err").show()
           } else if (!isValidAmount($("#ethlong_amount").val())) {
-            $("#eth_err").text("Please enter numbers only. Minimum amount is 0.01.")
+            $("#eth_err").text("Please enter numbers only. 0.01 is the minimum prediction amount.")
             $("#eth_err").show()
           } else {
             $("#eth_err").hide()
@@ -646,7 +646,7 @@
             $("#btc_err").text("Please enter a Year.")
             $("#btc_err").show()
           } else if (!isValidAmount($("#btclong_amount").val())) {
-            $("#btc_err").text("Please enter numbers only. Minimum amount is 0.01.")
+            $("#btc_err").text("Please enter numbers only. 0.01 is the minimum prediction amount.")
             $("#btc_err").show()
           } else {
             $("#btc_err").hide()
