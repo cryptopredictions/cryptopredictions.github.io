@@ -608,7 +608,7 @@
           } else if ($("#ethlong_year").val() == "") {
             $("#eth_err").text("Please enter a Year")
             $("#eth_err").show()
-          } else if (isNumeric($("#ethlong_amount").val())) {
+          } else if (!isNumeric($("#ethlong_amount").val())) {
             $("#eth_err").text("Please enter numbers only")
             $("#eth_err").show()
           } else {
@@ -642,7 +642,7 @@
           } else if ($("#btclong_year").val() == "") {
             $("#btc_err").text("Please enter a Year")
             $("#btc_err").show()
-          } else if (isNumeric($("#btclong_amount").val())) {
+          } else if (!isNumeric($("#btclong_amount").val())) {
             $("#btc_err").text("Please enter numbers only")
             $("#btc_err").show()
           } else {
